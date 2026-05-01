@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact WanderLux Travel Agency - Get in touch with us for travel inquiries, support, and bookings.">
+    <meta name="keywords" content="contact, phone, email, support, travel agency">
+    <meta name="author" content="WanderLux Travel Agency">
+    <title>Contact Us - WanderLux Travel Agency</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <h1 class="logo">WanderLux</h1>
+                <p class="tagline">Travel Your Way</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="calculator.html">Calculator</a></li>
+                <li><a href="appointment.html">Book Appointment</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>We'd love to hear from you. Get in touch with our team.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Contact Information Section -->
+            <section class="contact-info-section scroll-animate">
+                <h2>Get in Touch</h2>
+                <div class="contact-info-grid">
+                    <article class="info-card">
+                        <h3>📞 Phone</h3>
+                        <p><a href="tel:+61298765432">+61 2 9876 5432</a></p>
+                        <p><small>Available Monday-Friday, 9 AM - 5 PM (AEST)</small></p>
+                    </article>
+
+                    <article class="info-card">
+                        <h3>📧 Email</h3>
+                        <p><a href="mailto:info@wanderlux.com.au">info@wanderlux.com.au</a></p>
+                        <p><small>We typically respond within 24 hours</small></p>
+                    </article>
+
+                    <article class="info-card">
+                        <h3>🏢 Office Address</h3>
+                        <p>123 Travel Street<br>Sydney, NSW 2000<br>Australia</p>
+                    </article>
+
+                    <article class="info-card">
+                        <h3>⏰ Business Hours</h3>
+                        <p>Monday - Friday: 9:00 AM - 5:00 PM<br>
+                        Saturday: 10:00 AM - 2:00 PM<br>
+                        Sunday: Closed</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Contact Form Section -->
+            <section class="contact-form-section scroll-animate">
+                <h2>Send Us a Message</h2>
+                <p>Have a question or need assistance? Fill out the form below and we'll get back to you as soon as possible.</p>
+
+                <div class="form-container">
+                    <form id="contact-form" class="contact-form">
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label for="contact-name">Full Name <span class="required">*</span></label>
+                            <input 
+                                type="text" 
+                                id="contact-name" 
+                                name="name" 
+                                placeholder="John Doe"
+                                required
+                                aria-required="true"
+                                aria-label="Enter your full name"
+                            >
+                            <span class="error-message" id="contact-name-error"></span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="contact-email">Email Address <span class="required">*</span></label>
+                            <input 
+                                type="email" 
+                                id="contact-email" 
+                                name="email" 
+                                placeholder="your.email@example.com"
+                                required
+                                aria-required="true"
+                                aria-label="Enter your email address"
+                            >
+                            <span class="error-message" id="contact-email-error"></span>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="form-group">
+                            <label for="contact-phone">Phone Number <span class="required">*</span></label>
+                            <input 
+                                type="tel" 
+                                id="contact-phone" 
+                                name="phone" 
+                                placeholder="+61 2 1234 5678"
+                                required
+                                aria-required="true"
+                                aria-label="Enter your phone number"
+                            >
+                            <span class="error-message" id="contact-phone-error"></span>
+                        </div>
+
+                        <!-- Subject -->
+                        <div class="form-group">
+                            <label for="subject">Subject <span class="required">*</span></label>
+                            <select id="subject" name="subject" required aria-required="true">
+                                <option value="">Select a subject</option>
+                                <option value="inquiry">General Inquiry</option>
+                                <option value="booking">Booking Assistance</option>
+                                <option value="problem">Problem/Issue</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <span class="error-message" id="subject-error"></span>
+                        </div>
+
+                        <!-- Message -->
+                        <div class="form-group">
+                            <label for="contact-message">Message <span class="required">*</span></label>
+                            <textarea 
+                                id="contact-message" 
+                                name="message" 
+                                rows="6" 
+                                placeholder="Please describe how we can help you..."
+                                required
+                                aria-required="true"
+                                aria-label="Enter your message"
+                            ></textarea>
+                            <span class="error-message" id="contact-message-error"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="submit-button">Send Message</button>
+                        <button type="reset" class="reset-button">Clear Form</button>
+                    </form>
+
+                    <!-- Success Message -->
+                    <div id="contact-success-message" class="success-message" style="display: none;">
+                        <h3>Message Sent Successfully!</h3>
+                        <p>Thank you for contacting us. We've received your message and will get back to you within 24 hours.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Map Section (Placeholder) -->
+            <section class="map-section scroll-animate">
+                <h2>Find Us</h2>
+                <div class="map-container">
+                    <p style="text-align: center; padding: 2rem; background-color: #f0f0f0; border-radius: 8px;">
+                        📍 <strong>Map Location</strong><br>
+                        <small>In a real website, an embedded Google Map or similar service would appear here showing our office location at 123 Travel Street, Sydney, NSW 2000.</small>
+                    </p>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="faq-section scroll-animate">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-grid">
+                    <article class="faq-item">
+                        <h3>How quickly will I hear back from you?</h3>
+                        <p>We typically respond to all inquiries within 24 hours during business days. For urgent matters, please call us directly.</p>
+                    </article>
+
+                    <article class="faq-item">
+                        <h3>Can I book a trip directly online?</h3>
+                        <p>You can use our trip calculator to get an estimate and request an appointment for a consultation. We'll finalize bookings with you personally to ensure all details are perfect.</p>
+                    </article>
+
+                    <article class="faq-item">
+                        <h3>What if I need to cancel or modify my booking?</h3>
+                        <p>We understand that plans change. Contact us directly to discuss cancellation policies specific to your booking and dates.</p>
+                    </article>
+
+                    <article class="faq-item">
+                        <h3>Do you offer travel insurance?</h3>
+                        <p>Yes, we can advise on and help arrange travel insurance options suitable for your trip and requirements.</p>
+                    </article>
+
+                    <article class="faq-item">
+                        <h3>What payment methods do you accept?</h3>
+                        <p>We accept credit cards, bank transfers, and other payment methods. Discuss your preference with our consultants.</p>
+                    </article>
+
+                    <article class="faq-item">
+                        <h3>Can I customize a package from your website?</h3>
+                        <p>Absolutely! Any of our packages can be customized. Contact us to discuss your specific requirements and preferences.</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Call to Action -->
+            <section class="cta-section scroll-animate">
+                <h2>Start Planning Today</h2>
+                <p>Whether you want a quick consultation or are ready to book, we're here to help make your travel dreams come true.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="appointment.html" class="cta-button">Book Appointment</a>
+                    <a href="calculator.html" class="cta-button">Use Calculator</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 WanderLux Travel Agency. All rights reserved.</p>
+            <p>Providing personalized travel experiences worldwide.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

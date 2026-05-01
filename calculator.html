@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WanderLux Trip Cost Calculator - Calculate the estimated cost of your dream vacation instantly.">
+    <meta name="keywords" content="trip calculator, cost estimate, travel budget, vacation planner">
+    <meta name="author" content="WanderLux Travel Agency">
+    <title>Trip Cost Calculator - WanderLux Travel Agency</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <h1 class="logo">WanderLux</h1>
+                <p class="tagline">Travel Your Way</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="calculator.html" class="active">Calculator</a></li>
+                <li><a href="appointment.html">Book Appointment</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container">
+            <h1>Trip Cost Calculator</h1>
+            <p>Get an instant estimate for your dream vacation</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <section class="calculator-section scroll-animate">
+                <div class="calculator-container">
+                    <h2>Plan Your Budget</h2>
+                    <p>Fill in your travel details below to get an instant cost estimate for your trip.</p>
+
+                    <form id="calculator-form" class="calculator-form">
+                        <!-- Destination Selection -->
+                        <div class="form-group">
+                            <label for="destination">Destination <span class="required">*</span></label>
+                            <select id="destination" name="destination" required>
+                                <option value="">Choose a destination</option>
+                                <option value="bali">Bali, Indonesia ($150/day)</option>
+                                <option value="egypt">Cairo & Giza, Egypt ($120/day)</option>
+                                <option value="paris">Paris, France ($200/day)</option>
+                                <option value="new-zealand">New Zealand ($180/day)</option>
+                                <option value="thailand">Bangkok, Thailand ($100/day)</option>
+                                <option value="japan">Tokyo, Japan ($220/day)</option>
+                                <option value="italy">Rome, Italy ($190/day)</option>
+                                <option value="spain">Barcelona, Spain ($160/day)</option>
+                            </select>
+                        </div>
+
+                        <!-- Number of Travellers -->
+                        <div class="form-group">
+                            <label for="travellers">Number of Travellers <span class="required">*</span></label>
+                            <input type="number" id="travellers" name="travellers" min="1" max="20" value="1" required>
+                            <small>Maximum 20 travellers per booking</small>
+                        </div>
+
+                        <!-- Number of Days -->
+                        <div class="form-group">
+                            <label for="days">Number of Days <span class="required">*</span></label>
+                            <input type="number" id="days" name="days" min="1" max="365" value="7" required>
+                            <small>How many days will you be traveling?</small>
+                        </div>
+
+                        <!-- Travel Style -->
+                        <div class="form-group">
+                            <label>Travel Style <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="budget" name="travel-style" value="budget" checked>
+                                    <label for="budget">Budget (Basic accommodations & activities)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="standard" name="travel-style" value="standard">
+                                    <label for="standard">Standard (Comfortable hotels & tours) - 1.5x cost</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="luxury" name="travel-style" value="luxury">
+                                    <label for="luxury">Luxury (Premium hotels & experiences) - 2x cost</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="submit-button">Calculate Trip Cost</button>
+                        <button type="reset" class="reset-button">Clear Form</button>
+                    </form>
+
+                    <!-- Result Section -->
+                    <div id="result-section" class="result-section" style="display: none;">
+                        <h3>Your Estimated Trip Cost</h3>
+                        <div class="result-box">
+                            <div class="result-content">
+                                <p id="result-text" class="result-text"></p>
+                                <div class="breakdown">
+                                    <h4>Cost Breakdown</h4>
+                                    <ul id="breakdown-list">
+                                    </ul>
+                                    <p class="total-cost"><strong>Total Estimated Cost: <span id="total-cost">$0</span></strong></p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="disclaimer"><em>Note: This is an estimate. The actual cost may vary based on seasons, specific hotels, and activities chosen.</em></p>
+                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+                            <a href="appointment.html" class="cta-button">Book a Consultation</a>
+                            <button type="button" class="reset-button" onclick="document.getElementById('calculator-form').reset(); document.getElementById('result-section').style.display = 'none';">Calculate Another Trip</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Additional Information Section -->
+            <section class="info-section scroll-animate">
+                <h2>How Our Calculator Works</h2>
+                <div class="info-grid">
+                    <article class="info-card">
+                        <h3>Daily Base Cost</h3>
+                        <p>Each destination has a base daily cost per person. This includes accommodation, meals, and local transport.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>Travel Style Multiplier</h3>
+                        <p><strong>Budget:</strong> 1x (Base cost) | <strong>Standard:</strong> 1.5x | <strong>Luxury:</strong> 2x (For premium accommodations and experiences)</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>Final Estimate</h3>
+                        <p>Daily cost × Number of travellers × Number of days × Travel style multiplier = Total estimated cost</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Call to Action -->
+            <section class="cta-section scroll-animate">
+                <h2>Love What You See?</h2>
+                <p>Ready to book your dream vacation? Let's make it happen! Contact us for a personalized consultation or to finalize your booking.</p>
+                <a href="contact.html" class="cta-button">Get in Touch</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 WanderLux Travel Agency. All rights reserved.</p>
+            <p>Providing personalized travel experiences worldwide.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
