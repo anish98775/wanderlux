@@ -5,9 +5,78 @@
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     initializeScrollAnimations();
+    initializeHeroSlider();
     initializeCalculator();
     initializeFormValidation();
 });
+
+/* ==========================================
+   HERO SLIDER
+   ========================================== */
+
+function initializeHeroSlider() {
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+
+    if (!slides.length || !dots.length) return;
+
+    let currentSlide = 0;
+    let slideInterval;
+
+    function showSlide(index) {
+        slides.forEach((slide, idx) => {
+            slide.classList.toggle('active', idx === index);
+        });
+        dots.forEach((dot, idx) => {
+            dot.classList.toggle('active', idx === index);
+        });
+        currentSlide = index;
+    }
+
+    function startAutoSlide() {
+        slideInterval = setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }, 5000);
+    }
+
+    function stopAutoSlide() {
+        if (slideInterval) {
+            clearInterval(slideInterval);
+        }
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            stopAutoSlide();
+            currentSlide = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
+            showSlide(currentSlide);
+            startAutoSlide();
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            stopAutoSlide();
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+            startAutoSlide();
+        });
+    }
+
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            stopAutoSlide();
+            showSlide(index);
+            startAutoSlide();
+        });
+    });
+
+    showSlide(currentSlide);
+    startAutoSlide();
+}
 
 /* ==========================================
    SCROLL ANIMATIONS
@@ -15,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initializeScrollAnimations() {
     const scrollAnimateElements = document.querySelectorAll('.scroll-animate');
-    
+
     if ('IntersectionObserver' in window) {
         const observerOptions = {
             threshold: 0.1,
@@ -35,7 +104,6 @@ function initializeScrollAnimations() {
             observer.observe(element);
         });
     } else {
-        // Fallback for browsers that don't support IntersectionObserver
         scrollAnimateElements.forEach(element => {
             element.style.animation = 'fadeInUp 0.8s ease forwards';
         });
@@ -50,70 +118,112 @@ function initializeCalculator() {
     const calculatorForm = document.getElementById('calculator-form');
     if (!calculatorForm) return;
 
-    // Destination pricing (base cost per person per day)
     const destinationPrices = {
-        bali: 150,
-        egypt: 120,
-        paris: 200,
-        'new-zealand': 180,
-        thailand: 100,
-        japan: 220,
-        italy: 190,
-        spain: 160
+        bali: 180,
+        egypt: 140,
+        paris: 280,
+        'new-zealand': 250,
+        thailand: 120,
+        japan: 300,
+        italy: 260,
+        spain: 190
     };
 
-    // Travel style multipliers
     const styleMultipliers = {
-        budget: 1,
-        standard: 1.5,
-        luxury: 2
+        budget: 1.0,
+        standard: 1.8,
+        luxury: 3.2
+    };
+
+    const seasonalAdjustments = {
+        peak: 1.3,
+        shoulder: 1.1,
+        off: 0.85
     };
 
     calculatorForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        // Get form values
         const destination = document.getElementById('destination').value;
-        const travellers = parseInt(document.getElementById('travellers').value);
-        const days = parseInt(document.getElementById('days').value);
-        const travelStyle = document.querySelector('input[name="travel-style"]:checked').value;
+        const travellers = parseInt(document.getElementById('travellers').value, 10);
+        const days = parseInt(document.getElementById('days').value, 10);
+        const travelStyle = document.querySelector('input[name="travel-style"]:checked')?.value || 'budget';
+        const season = document.querySelector('input[name="season"]:checked')?.value || 'shoulder';
 
-        // Validate inputs
         if (!destination || !travellers || !days) {
-            alert('Please fill in all fields');
+            showCalculatorError('Please fill in all required fields');
             return;
         }
 
-        // Calculate cost
-        const basePrice = destinationPrices[destination];
-        const multiplier = styleMultipliers[travelStyle];
-        const totalCost = basePrice * travellers * days * multiplier;
+        if (travellers < 1 || travellers > 20) {
+            showCalculatorError('Number of travellers must be between 1 and 20');
+            return;
+        }
 
-        // Get destination name from select
+        if (days < 1 || days > 365) {
+            showCalculatorError('Number of days must be between 1 and 365');
+            return;
+        }
+
+        const basePrice = destinationPrices[destination] || 0;
+        const styleMultiplier = styleMultipliers[travelStyle] || 1;
+        const seasonalMultiplier = seasonalAdjustments[season] || 1;
+
+        let subtotal = basePrice * travellers * days * styleMultiplier;
+        subtotal *= seasonalMultiplier;
+
+        const taxesAndFees = subtotal * 0.15;
+        const flightEstimate = destination === 'bali' || destination === 'thailand' ? 800 : 1200;
+        const totalFlights = flightEstimate * travellers;
+        const totalCost = Math.round(subtotal + taxesAndFees + totalFlights);
+
         const destinationSelect = document.getElementById('destination');
         const destinationName = destinationSelect.options[destinationSelect.selectedIndex].text.split('(')[0].trim();
-
-        // Format travel style name
         const styleDisplay = travelStyle.charAt(0).toUpperCase() + travelStyle.slice(1);
+        const seasonDisplay = season.charAt(0).toUpperCase() + season.slice(1);
 
-        // Display result
-        displayCalculatorResult(destinationName, travellers, days, totalCost, styleDisplay, basePrice, multiplier);
+        displayCalculatorResult(destinationName, travellers, days, totalCost, styleDisplay, seasonDisplay, basePrice, styleMultiplier, seasonalMultiplier, taxesAndFees, totalFlights);
     });
 
-    function displayCalculatorResult(destination, travellers, days, total, style, basePrice, multiplier) {
-        // Show result section
+    function showCalculatorError(message) {
+        const existingError = document.querySelector('.calculator-error');
+        if (existingError) existingError.remove();
+
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'calculator-error';
+        errorDiv.style.cssText = `
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+        `;
+        errorDiv.textContent = message;
+        calculatorForm.insertBefore(errorDiv, calculatorForm.firstChild);
+
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.remove();
+            }
+        }, 5000);
+    }
+
+    function displayCalculatorResult(destination, travellers, days, total, style, season, basePrice, styleMultiplier, seasonalMultiplier, taxesAndFees, totalFlights) {
         const resultSection = document.getElementById('result-section');
+        if (!resultSection) return;
+
         resultSection.style.display = 'block';
-
-        // Update result text
         const resultText = document.getElementById('result-text');
-        resultText.textContent = `Estimated cost for ${travellers} traveller${travellers > 1 ? 's' : ''} to ${destination} for ${days} day${days > 1 ? 's' : ''}: $${total.toLocaleString()} – ${style} Travel Package.`;
+        resultText.textContent = `Estimated cost for ${travellers} traveller${travellers > 1 ? 's' : ''} to ${destination} for ${days} day${days > 1 ? 's' : ''}: $${total.toLocaleString()} – ${style} Travel Package (${season} Season).`;
 
-        // Update breakdown
         const breakdownList = document.getElementById('breakdown-list');
+        const subtotal = basePrice * travellers * days * styleMultiplier * seasonalMultiplier;
+
         breakdownList.innerHTML = `
             <li>
-                <span>Daily Cost per Person (${destination}):</span>
+                <span>Daily Base Cost (${destination}):</span>
                 <span>$${basePrice}</span>
             </li>
             <li>
@@ -125,19 +235,32 @@ function initializeCalculator() {
                 <span>${days}</span>
             </li>
             <li>
-                <span>Travel Style Multiplier (${style}):</span>
-                <span>${multiplier}x</span>
+                <span>Travel Style (${style}):</span>
+                <span>${styleMultiplier}x</span>
             </li>
-            <li style="border-top: 1px solid var(--border-color); padding-top: 0.5rem; margin-top: 0.5rem;">
-                <span><strong>Subtotal Calculation:</strong></span>
-                <span><strong>$${basePrice} × ${travellers} × ${days} × ${multiplier} = $${total.toLocaleString()}</strong></span>
+            <li>
+                <span>Seasonal Adjustment (${season}):</span>
+                <span>${seasonalMultiplier}x</span>
+            </li>
+            <li>
+                <span>Subtotal (before taxes/flights):</span>
+                <span>$${Math.round(subtotal).toLocaleString()}</span>
+            </li>
+            <li>
+                <span>Estimated Taxes & Fees (15%):</span>
+                <span>$${Math.round(taxesAndFees).toLocaleString()}</span>
+            </li>
+            <li>
+                <span>International Flights:</span>
+                <span>$${totalFlights.toLocaleString()}</span>
+            </li>
+            <li style="border-top: 2px solid var(--border-color); padding-top: 0.5rem; margin-top: 0.5rem; font-weight: bold;">
+                <span><strong>Total Estimated Cost:</strong></span>
+                <span><strong>$${total.toLocaleString()}</strong></span>
             </li>
         `;
 
-        // Update total
         document.getElementById('total-cost').textContent = `$${total.toLocaleString()}`;
-
-        // Scroll to result
         resultSection.scrollIntoView({ behavior: 'smooth' });
     }
 }
@@ -151,31 +274,45 @@ function initializeFormValidation() {
     const contactForm = document.getElementById('contact-form');
 
     if (appointmentForm) {
-        setupFormValidation(appointmentForm, 'appointment');
+        setupFormValidation(appointmentForm);
     }
 
     if (contactForm) {
-        setupFormValidation(contactForm, 'contact');
+        setupFormValidation(contactForm);
     }
 }
 
-function setupFormValidation(form, formType) {
+function setupFormValidation(form) {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        if (validateForm(form, formType)) {
-            handleFormSubmission(form, formType);
+        if (validateForm(form)) {
+            handleFormSubmission(form);
         }
+    });
+
+    const inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
+    inputs.forEach(input => {
+        input.addEventListener('blur', () => validateField(input));
+        input.addEventListener('focus', () => {
+            const errorElement = document.getElementById(`${input.id}-error`);
+            if (errorElement) {
+                errorElement.textContent = '';
+                errorElement.classList.remove('show');
+            }
+            input.style.borderColor = '';
+            input.style.boxShadow = '';
+        });
     });
 }
 
-function validateForm(form, formType) {
+function validateForm(form) {
     let isValid = true;
     const formElements = form.querySelectorAll('input, select, textarea');
 
     formElements.forEach(element => {
         if (element.hasAttribute('required')) {
-            if (!validateField(element, formType)) {
+            if (!validateField(element)) {
                 isValid = false;
             }
         }
@@ -184,90 +321,77 @@ function validateForm(form, formType) {
     return isValid;
 }
 
-function validateField(element, formType) {
+function validateField(element) {
     const value = element.value.trim();
     const errorElement = document.getElementById(`${element.id}-error`);
     let isValid = true;
     let errorMessage = '';
 
-    // Check if required
     if (!value) {
         isValid = false;
         errorMessage = 'This field is required';
-    } 
-    // Validate email
-    else if (element.type === 'email') {
+    } else if (element.type === 'email') {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) {
             isValid = false;
             errorMessage = 'Please enter a valid email address';
         }
-    }
-    // Validate phone
-    else if (element.type === 'tel') {
+    } else if (element.type === 'tel') {
         const phoneRegex = /^[\d\s+\-()]+$/;
-        if (!phoneRegex.test(value) || value.length < 10) {
+        if (!phoneRegex.test(value) || value.replace(/[^\d]/g, '').length < 8) {
             isValid = false;
             errorMessage = 'Please enter a valid phone number';
         }
-    }
-    // Validate date
-    else if (element.type === 'date') {
+    } else if (element.type === 'date') {
         const selectedDate = new Date(value);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        
         if (selectedDate < today) {
             isValid = false;
             errorMessage = 'Please select a future date';
         }
-    }
-    // Validate checkbox consent
-    else if (element.type === 'checkbox' && element.name === 'consent') {
-        if (!element.checked) {
+    } else if (element.type === 'number') {
+        const numValue = parseInt(value, 10);
+        const min = element.min ? parseInt(element.min, 10) : null;
+        const max = element.max ? parseInt(element.max, 10) : null;
+        if (min !== null && numValue < min) {
             isValid = false;
-            errorMessage = 'You must agree to be contacted';
+            errorMessage = `Minimum value is ${min}`;
         }
-    }
-    // Validate text length
-    else if (element.tagName === 'TEXTAREA' && value.length < 10) {
+        if (max !== null && numValue > max) {
+            isValid = false;
+            errorMessage = `Maximum value is ${max}`;
+        }
+    } else if (element.tagName === 'TEXTAREA' && value.length < 10) {
         isValid = false;
         errorMessage = 'Please provide at least 10 characters';
     }
 
-    // Display or hide error message
     if (errorElement) {
         if (isValid) {
             errorElement.textContent = '';
+            errorElement.classList.remove('show');
             errorElement.style.display = 'none';
-            element.style.borderColor = '';
         } else {
             errorElement.textContent = errorMessage;
+            errorElement.classList.add('show');
             errorElement.style.display = 'block';
-            element.style.borderColor = 'var(--accent-color)';
         }
     }
+
+    element.style.borderColor = isValid ? '' : 'var(--accent-color)';
+    element.style.boxShadow = isValid ? '' : '0 0 0 3px rgba(229, 62, 62, 0.12)';
 
     return isValid;
 }
 
-function handleFormSubmission(form, formType) {
-    // Show success message
-    let successMessageId;
-    
-    if (formType === 'appointment') {
-        successMessageId = 'success-message';
-    } else if (formType === 'contact') {
-        successMessageId = 'contact-success-message';
-    }
-
-    const successMessage = document.getElementById(successMessageId);
+function handleFormSubmission(form) {
+    const successMessage = form.querySelector('.success-message');
     if (successMessage) {
         form.style.display = 'none';
         successMessage.style.display = 'block';
         successMessage.scrollIntoView({ behavior: 'smooth' });
 
-        // Reset form after some time
         setTimeout(() => {
             form.reset();
             form.style.display = 'block';
@@ -275,118 +399,6 @@ function handleFormSubmission(form, formType) {
         }, 5000);
     }
 
-    // Log form data (replace with actual submission)
     const formData = new FormData(form);
-    console.log('Form Data:', Object.fromEntries(formData));
-
-    /* 
-    IMPORTANT NOTE FOR DEPLOYMENT:
-    To actually send emails, you need to implement one of these solutions:
-    
-    1. EMAILJS (Easy, free, no backend needed):
-       - Sign up at https://www.emailjs.com/
-       - Include their library: <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/build/index.min.js"></script>
-       - Initialize: emailjs.init('YOUR_PUBLIC_KEY');
-       - Send email: emailjs.send('SERVICE_ID', 'TEMPLATE_ID', formData);
-    
-    2. FORMSPREE (Free, simple):
-       - Change form action to: https://formspree.io/f/YOUR_FORM_ID
-       - Change form method to: POST
-    
-    3. NETLIFY FORMS (If hosting on Netlify):
-       - Add netlify attribute and hidden field
-    
-    For now, the form data is logged to console and message shows success.
-    */
+    console.log('Form submission:', Object.fromEntries(formData));
 }
-
-/* ==========================================
-   REAL-TIME FIELD VALIDATION
-   ========================================== */
-
-document.addEventListener('DOMContentLoaded', () => {
-    const inputs = document.querySelectorAll('input[required], textarea[required], select[required]');
-    
-    inputs.forEach(input => {
-        input.addEventListener('blur', () => {
-            // Get form type from closest form
-            const form = input.closest('form');
-            let formType = 'appointment';
-            
-            if (form && form.id === 'contact-form') {
-                formType = 'contact';
-            }
-            
-            validateField(input, formType);
-        });
-
-        input.addEventListener('focus', () => {
-            const errorElement = document.getElementById(`${input.id}-error`);
-            if (errorElement) {
-                errorElement.textContent = '';
-                errorElement.style.display = 'none';
-            }
-            input.style.borderColor = '';
-        });
-    });
-});
-
-/* ==========================================
-   UTILITY FUNCTIONS
-   ========================================== */
-
-// Smooth scroll navigation
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-        }
-    });
-});
-
-// Add active class to current nav link
-document.addEventListener('DOMContentLoaded', () => {
-    const currentLocation = location.pathname;
-    const navLinks = document.querySelectorAll('.nav-links a');
-    
-    navLinks.forEach(link => {
-        if (link.getAttribute('href') === currentLocation) {
-            link.classList.add('active');
-        }
-    });
-});
-
-/* ==========================================
-   FORM RESET WITH VALIDATION CLEANUP
-   ========================================== */
-
-document.addEventListener('DOMContentLoaded', () => {
-    const forms = document.querySelectorAll('form');
-    
-    forms.forEach(form => {
-        form.addEventListener('reset', () => {
-            // Clear all error messages
-            const errorMessages = form.querySelectorAll('.error-message');
-            errorMessages.forEach(error => {
-                error.textContent = '';
-                error.style.display = 'none';
-            });
-
-            // Clear invalid field styling
-            const inputs = form.querySelectorAll('input, select, textarea');
-            inputs.forEach(input => {
-                input.style.borderColor = '';
-            });
-        });
-    });
-});
-
-/* ==========================================
-   CONSOLE MESSAGE FOR DEVELOPERS
-   ========================================== */
-
-console.log('%cWanderLux Travel Agency', 'font-size: 20px; font-weight: bold; color: #2c3e50;');
-console.log('%cDeveloper Note: To enable email functionality, implement EmailJS or similar service.', 'color: #e74c3c; font-weight: bold;');
-console.log('%cSee comments in script.js for email implementation options.', 'color: #3498db;');

@@ -7,6 +7,9 @@
     <meta name="keywords" content="travel agency, holiday packages, guided tours, travel booking">
     <meta name="author" content="WanderLux Travel Agency">
     <title>WanderLux Travel Agency - Your Journey Starts Here</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -28,12 +31,42 @@
         </div>
     </nav>
 
-    <!-- Hero Section with Banner -->
+    <!-- Hero Section with Slider -->
     <header class="hero">
-        <div class="hero-content">
-            <h1>Discover Your Next Adventure</h1>
-            <p>Create unforgettable memories with WanderLux Travel Agency</p>
-            <a href="services.html" class="cta-button">Explore Services</a>
+        <div class="hero-slider">
+            <div class="slide active" style="background-image: url('images/bali.png');">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <h1>Discover Your Next Adventure</h1>
+                    <p>Create unforgettable memories with WanderLux Travel Agency</p>
+                    <a href="services.html" class="cta-button">Explore Services</a>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('images/egypt.png');">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <h1>Explore Hidden Gems</h1>
+                    <p>Discover destinations off the beaten path with our expert guides</p>
+                    <a href="services.html" class="cta-button">View Destinations</a>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('images/paris.png');">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <h1>Personalized Travel Experience</h1>
+                    <p>Tailored itineraries designed just for you and your loved ones</p>
+                    <a href="appointment.html" class="cta-button">Book Consultation</a>
+                </div>
+            </div>
+        </div>
+        <div class="slider-controls">
+            <button class="slider-btn prev-btn" aria-label="Previous slide">&larr;</button>
+            <div class="slider-dots">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+            </div>
+            <button class="slider-btn next-btn" aria-label="Next slide">&rarr;</button>
         </div>
     </header>
 

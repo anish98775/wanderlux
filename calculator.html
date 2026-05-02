@@ -7,6 +7,9 @@
     <meta name="keywords" content="trip calculator, cost estimate, travel budget, vacation planner">
     <meta name="author" content="WanderLux Travel Agency">
     <title>Trip Cost Calculator - WanderLux Travel Agency</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -81,15 +84,34 @@
                             <div class="radio-group">
                                 <div class="radio-option">
                                     <input type="radio" id="budget" name="travel-style" value="budget" checked>
-                                    <label for="budget">Budget (Basic accommodations & activities)</label>
+                                    <label for="budget">Budget (Hostels, local transport, street food)</label>
                                 </div>
                                 <div class="radio-option">
                                     <input type="radio" id="standard" name="travel-style" value="standard">
-                                    <label for="standard">Standard (Comfortable hotels & tours) - 1.5x cost</label>
+                                    <label for="standard">Standard (3-star hotels, guided tours, restaurants)</label>
                                 </div>
                                 <div class="radio-option">
                                     <input type="radio" id="luxury" name="travel-style" value="luxury">
-                                    <label for="luxury">Luxury (Premium hotels & experiences) - 2x cost</label>
+                                    <label for="luxury">Luxury (5-star resorts, private tours, fine dining)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Travel Season -->
+                        <div class="form-group">
+                            <label>Travel Season</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="off-season" name="season" value="off" checked>
+                                    <label for="off-season">Off Season (Best deals, fewer crowds)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="shoulder-season" name="season" value="shoulder">
+                                    <label for="shoulder-season">Shoulder Season (Moderate prices, pleasant weather)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="peak-season" name="season" value="peak">
+                                    <label for="peak-season">Peak Season (Higher prices, more crowds)</label>
                                 </div>
                             </div>
                         </div>
